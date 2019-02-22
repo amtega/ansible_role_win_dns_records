@@ -3,30 +3,21 @@
 # Copyright: (c) 2019, Hitachi ID Systems, Inc.
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#AnsibleRequires -CSharpUtil Ansible.Basic
+#Requires -Module Ansible.ModuleUtils.Legacy
 
-$spec = @{
-    options = @{
-        name = @{ type = "str"; required = $true }
-        state = @{ type = "str"; choices = "absent", "present"; default = "present" }
-        ttl = @{ type = "int"; default = "3600" }
-        type = @{ type = "str"; choices = "A","AAAA","CNAME","PTR"; required = $true }
-        value = @{ type = "list"; elements = "str"; default = @() ; aliases=@( 'values' )}
-        zone = @{ type = "str"; required = $true }
-        computer_name = @{ type = "str"; required = $false }
-    }
-    supports_check_mode = $true
-}
+$ErrorActionPreference = "Stop"
 
-$module = [Ansible.Basic.AnsibleModule]::Create($args, $spec)
+$params = Parse-Args -arguments $args -supports_check_mode $true
+$check_mode = Get-AnsibleParam -obj $params -name "_ansible_check_mode" -type "bool" -default $false
+$diff_mode = Get-AnsibleParam -obj $params -name "_ansible_diff" -type "bool" -default $false
 
-$name = $module.Params.name
-$state = $module.Params.state
-$ttl = $module.Params.ttl
-$type = $module.Params.type
-$values = $module.Params.value
-$zone = $module.Params.zone
-$dns_computer_name = $module.Params.computer_name
+$name = Get-AnsibleParam -obj $params -name "name" -type "str" -failifempty $true
+$state = Get-AnsibleParam -obj $params -name "state" -type "str" -default "present" -validateset "present","absent"
+$ttl = Get-AnsibleParam -obj $params -name "ttl" -type "int" -default 3600
+$type = Get-AnsibleParam -obj $params -name "type" -type "str" -failifempty $true -validateset "A","AAAA","CNAME","PTR"
+$values = Get-AnsibleParam -obj $params -name "value" -type "list" -default @() -aliases @("values")
+$zone = Get-AnsibleParam -obj $params -name "zone" -type "str" -failifempty $true
+$dns_computer_name = Get-AnsibleParam -obj $params -Name "computer_name" -failifempty $false
 
 
 $extra_args = @{}
@@ -38,14 +29,14 @@ if ($state -eq 'present')
 {
     if ($values.Count -eq 0)
     {
-        $module.FailJson("values must be non-empty when state='present'")
+        Fail-Json "values must be non-empty when state='present'"
     }
 }
 else
 {
     if ($values.Count -ne 0)
     {
-        $module.FailJson("values must be undefined or empty when state='absent'")
+        Fail-Json "values must be undefined or empty when state='absent'"
     }
 }
 
@@ -53,7 +44,7 @@ else
 # TODO: add warning for forest minTTL override -- see https://docs.microsoft.com/en-us/windows/desktop/ad/configuration-of-ttl-limits
 if ($ttl -lt 1 -or $ttl -gt 31557600)
 {
-    $module.FailJson("ttl must be between 1 and 31557600")
+    Fail-Json "ttl must be between 1 and 31557600"
 }
 $ttl = New-TimeSpan -Seconds $ttl
 
@@ -83,6 +74,9 @@ $record_argument_name = @{
 }[$type]
 
 
+$changes = New-Object -Typename System.Collections.ArrayList
+
+
 $records = Get-DnsServerResourceRecord -ZoneName $zone -Name $name -RRType $type -Node -ErrorAction:Ignore @extra_args | Sort-Object
 if ($records -ne $null)
 {
@@ -107,9 +101,11 @@ if ($records -ne $null)
             {
                 $new_record = $record.Clone()
                 $new_record.TimeToLive = $ttl
-                Set-DnsServerResourceRecord -ZoneName $zone -OldInputObject $record -NewInputObject $new_record -WhatIf:$module.CheckMode @extra_args
+                Set-DnsServerResourceRecord -ZoneName $zone -OldInputObject $record -NewInputObject $new_record -WhatIf:$check_mode @extra_args
 
-                $module.Result.changed = $true
+                $changes += "-[$zone] $($record.HostName) $($record.TimeToLive.TotalSeconds) $type $record_value`n"
+                $changes += "+[$zone] $($record.HostName) $($ttl.TotalSeconds) $type $record_value`n"
+                $result.changed = $true
             }
 
             # Cross this one off the list, so we don't try adding it later
@@ -118,9 +114,10 @@ if ($records -ne $null)
         else
         {
             # This record doesn't match any of the values, and must be removed
-            $record | Remove-DnsServerResourceRecord -ZoneName $zone -Force -WhatIf:$module.CheckMode @extra_args
+            $record | Remove-DnsServerResourceRecord -ZoneName $zone -Force -WhatIf:$check_mode @extra_args
 
-            $module.Result.changed = $true
+            $changes += "-[$zone] $($record.HostName) $($record.TimeToLive.TotalSeconds) $type $record_value`n"
+            $result.changed = $true
         }
     }
 
@@ -134,20 +131,18 @@ if ($values -ne $null -and $values.Count -gt 0)
     foreach ($value in $values)
     {
         $splat_args = @{ $type = $true; $record_argument_name = $value }
-        $module.Result.debug_splat_args = $splat_args
-        try {
-          Add-DnsServerResourceRecord -ZoneName $zone -Name $name -AllowUpdateAny -TimeToLive $ttl @splat_args -WhatIf:$module.CheckMode @extra_args
-        } catch {
-            $module.FailJson("Error adding DNS $type resource $name in zone $zone with value $value", $_)
-        }
-        $module.Result.debug_Add_DnsServerResourceRecord = "Add-DnsServerResourceRecord -ZoneName $zone -Name $name -AllowUpdateAny -TimeToLive $ttl -$type -$record_argument_name $value"
+        Add-DnsServerResourceRecord -ZoneName $zone -Name $name -AllowUpdateAny -TimeToLive $ttl @splat_args -WhatIf:$check_mode @extra_args
+
+        $changes += "+[$zone] $name $($ttl.TotalSeconds) $type $value`n"
     }
 
-    $module.Result.changed = $true
+    $result.changed = $true
 }
-$records_end = Get-DnsServerResourceRecord -ZoneName $zone -Name $name -RRType $type -Node -ErrorAction:Ignore @extra_args | Sort-Object
 
-$module.Diff.before = @($records | ForEach-Object { "[$zone] $($_.HostName) $($_.TimeToLive.TotalSeconds) $type $($_.RecordData.$record_argument_name.ToString())`n" }) -join ''
-$module.Diff.after = @($records_end | ForEach-Object { "[$zone] $($_.HostName) $($_.TimeToLive.TotalSeconds) $type $($_.RecordData.$record_argument_name.ToString())`n" }) -join ''
 
-$module.ExitJson()
+if ($diff_mode) {
+    $result.diff = @{ prepared = ($changes -Join '') }
+}
+
+
+Exit-Json -obj $result
