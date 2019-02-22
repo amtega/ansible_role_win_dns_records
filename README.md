@@ -1,96 +1,61 @@
-# Ansible <!-- this role name --> role
+# Ansible win_dns_record role
 
-This is an [Ansible](http://www.ansible.com) role which <!-- brief description of the role goes here -->.
+This is an [Ansible](http://www.ansible.com) role for management of Active Directory DNS records.
 
 ## Requirements
 
-<!-- Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required. For example: -->
-
-[Ansible 2.7+](http://docs.ansible.com/ansible/latest/intro_installation.html)
+[Ansible 2.7.1+](http://docs.ansible.com/ansible/latest/intro_installation.html)
 
 ## Role Variables
 
-<!-- A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well. For example: -->
-
-A list of all the default variables for this role is available in `defaults/main.yml`.
-
-The role also setups the following facts:
-
-- `thisrole_fact1`: description of the fact
-- `thisrole_fact2`: description of the fact
-- `thisrole_factN`: description of the fact
-
-## Filters
-
-<!-- A description of the filters provided by the role should go here. For example: -->
-
-The role provides these filters:
-
-- `thisrole_filter1`: description of the filter
-- `thisrole_filter2`: description of the filter
-- `thisrole_filterN`: description of the filter
-
-## Modules
-
-<!-- A description of the modules provided by the role should go here. For example: -->
-
-The role provides these modules:
-
-- `thisrole_module1`: description of the module
-- `thisrole_module2`: description of the module
-- `thisrole_moduleN`: description of the module
-
-## Tests
-
-<!-- A description of the tests provided by the role should go here. For example: -->
-
-The role provides these tests:
-
-- `thisrole_test1`: description of the test
-- `thisrole_test2`: description of the test
-- `thisrole_testN`: description of the test
+None.  
+Module `win_dns_record` variables are described in it's own documentation.
 
 ## Dependencies
 
-<!-- A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles. For example: -->
+None.
 
-- [amtega.check_platform](https://galaxy.ansible.com/amtega/check_platform)
-- [amtega.proxy_client](https://galaxy.ansible.com/amtega/proxy_client)
-- [amtega.packages](https://galaxy.ansible.com/amtega/packages)
+## Example Playbook
 
-## Usage
+```yml
+- name: win ping pdc
+  win_ping:
 
-<!-- Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too. For example: -->
+- name: using amtega.win_dns_record role to import win_dns_record module
+  import_role:
+    name: amtega.win_dns_record
 
-This is an example playbook:
 
-```yaml
----
-
-- hosts: all
-  roles:
-    - role: thisrole
-      thisrole_var1: value1
-      thisrole_var2: value2
-      thisrole_varN: valuen
+- name: "Add DNS A records: test1 => 1.2.3.4"
+  win_dns_record:
+    zone: domain.local
+    name: test1
+    value: 1.2.3.4
+    type: A
 ```
 
 ## Testing
 
-<!-- A description of how to run tests of the role if available. For example: -->
+### Dependencies
 
-Tests are based on docker containers. You can setup docker engine quickly using the playbook `files/setup.yml` available in the role [amtega.docker_engine](https://galaxy.ansible.com/amtega/docker_engine).
+Tests are based on vagrant virtual machines. You can setup vagrant engine
+quickly using the role [amtega.vagrant_engine](https://galaxy.ansible.com/amtega/vagrant_engine).
 
-Once you have docker, you can run the tests with the following commands:
+### Execution
+
+Once you have vagrant and virtualbox, you can run the tests with the following
+commands:
 
 ```shell
-$ cd thisrole/tests
+$ cd amtega.amtega.win_dns_record/tests
 $ ansible-playbook main.yml
+$ ansible-playbook main.yml --diff
+$ ansible-playbook main.yml --diff --check
 ```
 
 ## License
 
-Copyright (C) <!-- YEAR --> AMTEGA - Xunta de Galicia
+Copyright (C) 2019 AMTEGA - Xunta de Galicia
 
 This role is free software: you can redistribute it and/or modify it under the terms of:
 
@@ -100,6 +65,4 @@ This role is distributed in the hope that it will be useful, but WITHOUT ANY WAR
 
 ## Author Information
 
-- <!-- author _name 1 -->.
-- <!-- author _name 2 -->.
-- <!-- author _name N -->.
+- Daniel Sánchez Fábregas
