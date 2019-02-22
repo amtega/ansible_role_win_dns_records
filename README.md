@@ -48,9 +48,10 @@ commands:
 
 ```shell
 $ cd amtega.amtega.win_dns_record/tests
+$ vagrant init jborean93/WindowsServer2016
+$ vagrant up
 $ ansible-playbook main.yml
 $ ansible-playbook main.yml --diff
-$ ansible-playbook main.yml --diff --check
 ```
 
 ## License
