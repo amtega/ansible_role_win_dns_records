@@ -8,9 +8,9 @@
       win_ping:
       register: ping_result
 
-    - name: using win_dns_record role
+    - name: using win_dns_records role
       import_role:
-        name: amtega.win_dns_record
+        name: amtega.win_dns_records
 
 
     - block:

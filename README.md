@@ -1,4 +1,4 @@
-# Ansible win_dns_record role
+# Ansible win_dns_records role
 
 This is an [Ansible](http://www.ansible.com) role for management of Active Directory DNS records.
 
@@ -21,9 +21,9 @@ None.
 - name: win ping pdc
   win_ping:
 
-- name: using amtega.win_dns_record role to import win_dns_record module
+- name: using amtega.win_dns_records role to import win_dns_record module
   import_role:
-    name: amtega.win_dns_record
+    name: amtega.win_dns_records
 
 
 - name: "Add DNS A records: test1 => 1.2.3.4"
@@ -47,7 +47,7 @@ Once you have vagrant and virtualbox, you can run the tests with the following
 commands:
 
 ```shell
-$ cd amtega.amtega.win_dns_record/tests
+$ cd amtega.amtega.win_dns_records/tests
 $ vagrant init jborean93/WindowsServer2016
 $ vagrant up
 $ ansible-playbook main.yml
