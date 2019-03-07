@@ -47,7 +47,7 @@ Once you have vagrant and virtualbox, you can run the tests with the following
 commands:
 
 ```shell
-$ cd amtega.amtega.win_dns_records/tests
+$ cd amtega.win_dns_records/tests
 $ vagrant init jborean93/WindowsServer2016
 $ vagrant up
 $ ansible-playbook main.yml
