@@ -8,45 +8,49 @@
       win_ping:
       register: ping_result
 
-    - name: using win_dns_records role
-      import_role:
-        name: amtega.win_dns_records
-
-
     - block:
-       - name: check if feature is availble
-         win_shell: if (Get-Command -Name Add-WindowsFeature -ErrorAction SilentlyContinue) { $true } else { $false }
-         changed_when: False
-         register: module_available
+        - name: check if feature is availble
+          win_shell: if (Get-Command -Name Add-WindowsFeature -ErrorAction SilentlyContinue) { $true } else { $false }
+          changed_when: False
+          register: module_available
 
-       - name: install DNS features
-         when: module_available.stdout | trim | bool
-         block:
+        - name: install DNS features
+          when: module_available.stdout | trim | bool
+          block:
 
-           - name: ensure DNS services are installed
-             win_feature:
-               name: DNS
-               state: present
-             register: dns_install
+            - name: ensure DNS services are installed
+              win_feature:
+                name: DNS
+                state: present
+              register: dns_install
 
-       - name: reboot server if needed
-         win_reboot:
-         when: dns_install.reboot_required
+        - name: reboot server if needed
+          win_reboot:
+          when: dns_install.reboot_required
 
-       - name: Clean slate
-         import_tasks: tasks/clean.yml
-         vars:
-           fail_on_missing: false
+        - name: Clean slate
+          import_tasks: tasks/clean.yml
+          vars:
+            fail_on_missing: false
 
-       - name: Create the forward zone
-         win_shell: Add-DnsServerPrimaryZone -Name '{{ win_dns_record_zone }}' -ZoneFile '{{ win_dns_record_zone}}.dns'
-       - name: Create the reverse zone
-         win_shell: Add-DnsServerPrimaryZone -NetworkID '{{ win_dns_record_revzone_network }}' -ZoneFile '{{ win_dns_record_revzone}}.dns'
+        - name: Create the forward zone
+          win_shell: Add-DnsServerPrimaryZone -Name '{{ win_dns_record_zone }}' -ZoneFile '{{ win_dns_record_zone}}.dns'
+        - name: Create the reverse zone
+          win_shell: Add-DnsServerPrimaryZone -NetworkID '{{ win_dns_record_revzone_network }}' -ZoneFile '{{ win_dns_record_revzone}}.dns'
 
-       - import_tasks: tasks/tests-A.yml
-       - import_tasks: tasks/tests-AAAA.yml
-       - import_tasks: tasks/tests-CNAME.yml
-       - import_tasks: tasks/tests-PTR.yml
+        - import_tasks: tasks/tests-record_list.yml
+
+        - name: using win_dns_records role
+          vars:
+            win_dns_records: []
+          import_role:
+            name: amtega.win_dns_records
+            allow_duplicates: true
+
+        - import_tasks: tasks/tests-A.yml
+        - import_tasks: tasks/tests-AAAA.yml
+        - import_tasks: tasks/tests-CNAME.yml
+        - import_tasks: tasks/tests-PTR.yml
 
       always:
        - name: Clean slate

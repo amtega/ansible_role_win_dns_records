@@ -29,7 +29,10 @@
     loop: "{{ win_dns_records }}"
     loop_control:
       loop_var: win_dns_records_item
-      label: "[{{ win_dns_records_item.name }}]{{ win_dns_records_item.name }} - {{ win_dns_records_item.value }}"
+      label: >-
+        [{{ win_dns_records_item.type | default('') }}]
+        {{ win_dns_records_item.name | default('') }} -
+        {{ win_dns_records_item.value | default('') }}
 
   tags:
     - role::win_dns_records
