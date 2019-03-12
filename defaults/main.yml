@@ -1,2 +1,20 @@
 ---
 # Role default lower priority variables
+
+# List of dicts with win_dns_records to configure. The dicts have the same
+# attributes that the ones expected by the ansible win_dns_records module.
+# For example:
+#
+# win_dns_records:
+#   - name: test1
+#     type: A
+#     value: 1.2.3.4
+#     zone: domain.local
+#   - name: "4"
+#     type: PTR
+#     value: test1
+#     zone: 3.2.1.in-addr.arpa
+#   - name: www.test1
+#     type: CNAME
+#     value: test1
+#     zone: domain.local
