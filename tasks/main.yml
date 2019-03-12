@@ -1,38 +1,40 @@
 ---
 # Role tasks
 
-- block:
-
-  - name: setup dns records
-    win_dns_record:
-      name: >-
-        {{ win_dns_records_item.name
-           | default(omit) }}
-      type: >-
-        {{ win_dns_records_item.type
-           | default(omit) }}
-      value: >-
-        {{ win_dns_records_item.value
-           | default(omit) }}
-      zone: >-
-        {{ win_dns_records_item.zone
-           | default(omit) }}
-      state: >-
-        {{ win_dns_records_item.state
-           | default(omit) }}
-      ttl: >-
-        {{ win_dns_records_item.ttl
-           | default(omit) }}
-      computer_name: >-
-        {{ win_dns_records_item.computer_name
-           | default(omit) }}
-    loop: "{{ win_dns_records }}"
-    loop_control:
-      loop_var: win_dns_records_item
-      label: >-
-        [{{ win_dns_records_item.type | default('') }}]
-        {{ win_dns_records_item.name | default('') }} -
-        {{ win_dns_records_item.value | default('') }}
-
+- name: Setup dns records
+  win_dns_record:
+    name: >-
+      {{ win_dns_records_item.name
+         | default(omit) }}
+    type: >-
+      {{ win_dns_records_item.type
+         | default(omit) }}
+    value: >-
+      {{ win_dns_records_item.value
+         | default(omit) }}
+    zone: >-
+      {{ win_dns_records_item.zone
+         | default(omit) }}
+    state: >-
+      {{ win_dns_records_item.state
+         | default(omit) }}
+    ttl: >-
+      {{ win_dns_records_item.ttl
+         | default(omit) }}
+    computer_name: >-
+      {{ win_dns_records_item.computer_name
+         | default(omit) }}
+  loop: "{{ win_dns_records_to_manage }}"
+  loop_control:
+    loop_var: win_dns_records_item
+    label: >-
+      [{{ win_dns_records_item.type | default('') }}]
+      {{ win_dns_records_item.name | default('') }} -
+      {{ win_dns_records_item.value | default('') }}
+  vars:
+    win_dns_records_to_manage: >-
+      {{ win_dns_records
+         + ((win_dns_records_load_from_hostvars)
+            | ternary(win_dns_records_hostvars | default([]) | flatten, [])) }}
   tags:
     - role::win_dns_records

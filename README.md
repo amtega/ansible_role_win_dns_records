@@ -1,19 +1,10 @@
 # Ansible win_dns_records role
 
-This is an [Ansible](http://www.ansible.com) role for management of Active Directory DNS records.
-
-## Requirements
-
-[Ansible 2.7.1+](http://docs.ansible.com/ansible/latest/intro_installation.html)
+This is an [Ansible](http://www.ansible.com) role to manage of Active Directory DNS records.
 
 ## Role Variables
 
-None.  
-Module `win_dns_record` variables are described in it's own documentation.
-
-## Dependencies
-
-None.
+A list of all the default variables for this role is available in `defaults/main.yml`.
 
 ## Example Playbook
 
@@ -24,7 +15,6 @@ None.
 - name: using amtega.win_dns_records role to import win_dns_record module
   import_role:
     name: amtega.win_dns_records
-
 
 - name: "Add DNS A records: test1 => 1.2.3.4"
   win_dns_record:

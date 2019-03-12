@@ -1,9 +1,22 @@
 ---
 # Role default lower priority variables
 
-# List of dicts with win_dns_records to configure. The dicts have the same
-# attributes that the ones expected by the ansible win_dns_records module.
-# For example:
+# List of dicts with win_dns_records to configure. The dicts have the following
+# attributes:
+#
+# name: <name>                  # The name of the record
+# state: <state>                # Can be `present` or `absent`
+# ttl: <ttl>                    # The "time to live" of the record, in seconds.
+# type: <type>                  # Can be `A`, `AAAA`, `CNAME` or `PTR`
+# value: <value>                # The value(s) to specify
+# zone: <zone>                  # The name of the zone to manage.
+#                               # The zone must already exist.
+# computer_name: <name>         # Specifies a DNS server. You can specify an
+#                               # IP address or any value that resolves to an IP
+#                               # address, such as a fully qualified domain
+#                               # name (FQDN), host name, or NETBIOS name.
+#
+# Example:
 #
 # win_dns_records:
 #   - name: test1
@@ -18,3 +31,12 @@
 #     type: CNAME
 #     value: test1
 #     zone: domain.local
+
+win_dns_records: []
+
+# Indicate `win_dns_records` must be loaded also from host variables. Any host
+# variable that begins with "win_dns_records_*" and contains the necessary
+# attributes will be loaded as an item to manage by the role. The variables must
+# follow the structure detailed before for `win_dns_records`
+
+win_dns_records_load_from_hostvars: no
