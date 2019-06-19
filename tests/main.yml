@@ -13,7 +13,7 @@
           win_shell: >-
             if (Get-Command -Name Add-WindowsFeature \
             -ErrorAction SilentlyContinue) { $true } else { $false }
-          changed_when: False
+          changed_when: no
           register: module_available
 
         - name: Ensure DNS services are installed
@@ -25,12 +25,12 @@
 
         - name: Reboot server if needed
           win_reboot:
-          when: dns_install.reboot_required
+          when: dns_install.reboot_required | bool
 
         - name: Clean slate
           import_tasks: tasks/clean.yml
           vars:
-            fail_on_missing: false
+            fail_on_missing: no
 
         - name: Create the forward zone
           win_shell: >-
@@ -49,7 +49,7 @@
             win_dns_records: []
           import_role:
             name: amtega.win_dns_records
-            allow_duplicates: true
+            allow_duplicates: yes
 
         - import_tasks: tasks/tests-A.yml
         - import_tasks: tasks/tests-AAAA.yml
