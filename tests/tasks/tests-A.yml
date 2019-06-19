@@ -6,7 +6,7 @@
 - name: 'TYPE=A - creation get results (check mode)'
   win_command: powershell.exe "If (Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_zone }}' -Name 'test1' -RRType A -Node -ErrorAction:Ignore) { 'exists' } else { 'absent' }"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=A - creation check results (check mode)'
   assert:
@@ -21,7 +21,7 @@
 - name: 'TYPE=A - creation get results'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_zone }}' -Name 'test1' -RRType A -Node -ErrorAction:Ignore | Select -ExpandProperty RecordData | Select -ExpandProperty IPv4Address | Select -ExpandProperty IPAddressToString"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=A - creation check results'
   assert:
@@ -36,7 +36,7 @@
 - name: 'TYPE=A - creation get results (idempotent)'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_zone }}' -Name 'test1' -RRType A -Node -ErrorAction:Ignore | Select -ExpandProperty RecordData | Select -ExpandProperty IPv4Address | Select -ExpandProperty IPAddressToString"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=A - creation check results (idempotent)'
   assert:
@@ -53,7 +53,7 @@
 - name: 'TYPE=A - update address get results (check mode)'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_zone }}' -Name 'test1' -RRType A -Node -ErrorAction:Ignore | Select -ExpandProperty RecordData | Select -ExpandProperty IPv4Address | Select -ExpandProperty IPAddressToString"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=A - update address check results (check mode)'
   assert:
@@ -68,7 +68,7 @@
 - name: 'TYPE=A - update address get results'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_zone }}' -Name 'test1' -RRType A -Node -ErrorAction:Ignore | Select -ExpandProperty RecordData | Select -ExpandProperty IPv4Address | Select -ExpandProperty IPAddressToString"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=A - update address check results'
   assert:
@@ -83,7 +83,7 @@
 - name: 'TYPE=A - update address get results (idempotent)'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_zone }}' -Name 'test1' -RRType A -Node -ErrorAction:Ignore | Select -ExpandProperty RecordData | Select -ExpandProperty IPv4Address | Select -ExpandProperty IPAddressToString"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=A - update address check results (idempotent)'
   assert:
@@ -100,7 +100,7 @@
 - name: 'TYPE=A - update TTL get results (check mode)'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_zone }}' -Name 'test1' -RRType A -Node -ErrorAction:Ignore | Select -ExpandProperty TimeToLive | Select -ExpandProperty TotalSeconds"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=A - update TTL check results (check mode)'
   assert:
@@ -115,7 +115,7 @@
 - name: 'TYPE=A - update TTL get results'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_zone }}' -Name 'test1' -RRType A -Node -ErrorAction:Ignore | Select -ExpandProperty TimeToLive | Select -ExpandProperty TotalSeconds"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=A - update TTL check results'
   assert:
@@ -130,7 +130,7 @@
 - name: 'TYPE=A - update TTL get results (idempotent)'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_zone }}' -Name 'test1' -RRType A -Node -ErrorAction:Ignore | Select -ExpandProperty TimeToLive | Select -ExpandProperty TotalSeconds"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=A - update TTL check results (idempotent)'
   assert:
@@ -147,7 +147,7 @@
 - name: 'TYPE=A - remove record get results (check mode)'
   win_command: powershell.exe "If (Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_zone }}' -Name 'test1' -RRType A -Node -ErrorAction:Ignore) { 'exists' } else { 'absent' }"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=A - remove record check results (check mode)'
   assert:
@@ -162,7 +162,7 @@
 - name: 'TYPE=A - remove record get results'
   win_command: powershell.exe "If (Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_zone }}' -Name 'test1' -RRType A -Node -ErrorAction:Ignore) { 'exists' } else { 'absent' }"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=A - remove record check results'
   assert:
@@ -177,7 +177,7 @@
 - name: 'TYPE=A - update address get results (idempotent)'
   win_command: powershell.exe "If (Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_zone }}' -Name 'test1' -RRType A -Node -ErrorAction:Ignore) { 'exists' } else { 'absent' }"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=A - update address check results (idempotent)'
   assert:

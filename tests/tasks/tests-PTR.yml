@@ -6,7 +6,7 @@
 - name: 'TYPE=PTR - creation get results (check mode)'
   win_command: powershell.exe "If (Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_revzone }}' -Name '7' -RRType PTR -Node -ErrorAction:Ignore) { 'exists' } else { 'absent' }"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=PTR - creation check results (check mode)'
   assert:
@@ -21,7 +21,7 @@
 - name: 'TYPE=PTR - creation get results'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_revzone }}' -Name '7' -RRType PTR -Node -ErrorAction:Ignore | Select -ExpandProperty RecordData | Select -ExpandProperty PtrDomainName"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=PTR - creation check results'
   assert:
@@ -36,7 +36,7 @@
 - name: 'TYPE=PTR - creation get results (idempotent)'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_revzone }}' -Name '7' -RRType PTR -Node -ErrorAction:Ignore | Select -ExpandProperty RecordData | Select -ExpandProperty PtrDomainName"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=PTR - creation check results (idempotent)'
   assert:
@@ -53,7 +53,7 @@
 - name: 'TYPE=PTR - update address get results (check mode)'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_revzone }}' -Name '7' -RRType PTR -Node -ErrorAction:Ignore | Select -ExpandProperty RecordData | Select -ExpandProperty PtrDomainName"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=PTR - update address check results (check mode)'
   assert:
@@ -68,7 +68,7 @@
 - name: 'TYPE=PTR - update address get results'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_revzone }}' -Name '7' -RRType PTR -Node -ErrorAction:Ignore | Select -ExpandProperty RecordData | Select -ExpandProperty PtrDomainName"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=PTR - update address check results'
   assert:
@@ -83,7 +83,7 @@
 - name: 'TYPE=PTR - update address get results (idempotent)'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_revzone }}' -Name '7' -RRType PTR -Node -ErrorAction:Ignore | Select -ExpandProperty RecordData | Select -ExpandProperty PtrDomainName"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=PTR - update address check results (idempotent)'
   assert:
@@ -100,7 +100,7 @@
 - name: 'TYPE=PTR - update TTL get results (check mode)'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_revzone }}' -Name '7' -RRType PTR -Node -ErrorAction:Ignore | Select -ExpandProperty TimeToLive | Select -ExpandProperty TotalSeconds"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=PTR - update TTL check results (check mode)'
   assert:
@@ -115,7 +115,7 @@
 - name: 'TYPE=PTR - update TTL get results'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_revzone }}' -Name '7' -RRType PTR -Node -ErrorAction:Ignore | Select -ExpandProperty TimeToLive | Select -ExpandProperty TotalSeconds"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=PTR - update TTL check results'
   assert:
@@ -130,7 +130,7 @@
 - name: 'TYPE=PTR - update TTL get results (idempotent)'
   win_command: powershell.exe "Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_revzone }}' -Name '7' -RRType PTR -Node -ErrorAction:Ignore | Select -ExpandProperty TimeToLive | Select -ExpandProperty TotalSeconds"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=PTR - update TTL check results (idempotent)'
   assert:
@@ -147,7 +147,7 @@
 - name: 'TYPE=PTR - remove record get results (check mode)'
   win_command: powershell.exe "If (Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_revzone }}' -Name '7' -RRType PTR -Node -ErrorAction:Ignore) { 'exists' } else { 'absent' }"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=PTR - remove record check results (check mode)'
   assert:
@@ -162,7 +162,7 @@
 - name: 'TYPE=PTR - remove record get results'
   win_command: powershell.exe "If (Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_revzone }}' -Name '7' -RRType PTR -Node -ErrorAction:Ignore) { 'exists' } else { 'absent' }"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=PTR - remove record check results'
   assert:
@@ -177,7 +177,7 @@
 - name: 'TYPE=PTR - update address get results (idempotent)'
   win_command: powershell.exe "If (Get-DnsServerResourceRecord -ZoneName '{{ win_dns_record_revzone }}' -Name '7' -RRType PTR -Node -ErrorAction:Ignore) { 'exists' } else { 'absent' }"
   register: cmd_result_actual
-  changed_when: false
+  changed_when: no
 
 - name: 'TYPE=PTR - update address check results (idempotent)'
   assert:

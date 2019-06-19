@@ -14,8 +14,8 @@ galaxy_info:
         - 7
     - name: Fedora
       versions:
-        - 27
-        - 28
+        - 29
+        - 30
     - name: Windows
       versions:
         - 2016
@@ -33,6 +33,6 @@ dependencies:
           - name
         fact_name: win_dns_records_hostvars
         output_type: list
-    when: win_dns_records_load_from_hostvars
+    when: win_dns_records_load_from_hostvars | bool
     tags:
       - role::win_dns_records
