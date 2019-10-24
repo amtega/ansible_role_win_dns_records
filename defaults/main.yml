@@ -40,3 +40,7 @@ win_dns_records: []
 # follow the structure detailed before for `win_dns_records`
 
 win_dns_records_load_from_hostvars: no
+
+# Hide sensitive information
+
+win_dns_records_no_log: yes
