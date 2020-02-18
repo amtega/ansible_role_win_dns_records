@@ -1,9 +1,41 @@
 ---
 - name: Prepare
-  hosts: all
-  gather_facts: false
+  hosts: windows
   tasks:
-    - name: Install python for Ansible
-      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
-      become: true
-      changed_when: false
+    - name: Win ping pdc
+      win_ping:
+      register: ping_result
+
+    - block:
+        - name: Check if feature is availble
+          win_shell: >-
+            if (Get-Command -Name Add-WindowsFeature \
+            -ErrorAction SilentlyContinue) { $true } else { $false }
+          changed_when: no
+          register: module_available
+
+        - name: Ensure DNS services are installed
+          win_feature:
+            name: DNS
+            state: present
+          when: module_available.stdout | trim | bool
+          register: dns_install
+
+        - name: Reboot server if needed
+          win_reboot:
+          when: dns_install.reboot_required | bool
+
+        - name: Clean slate
+          import_tasks: tasks/clean.yml
+          vars:
+            fail_on_missing: no
+
+        - name: Create the forward zone
+          win_shell: >-
+            Add-DnsServerPrimaryZone -Name \
+            '{{ win_dns_record_zone }}' -ZoneFile '{{ win_dns_record_zone}}.dns'
+
+        - name: Create the reverse zone
+          win_shell: >-
+            Add-DnsServerPrimaryZone -NetworkID \
+            '{{ win_dns_record_revzone_network }}' -ZoneFile '{{ win_dns_record_revzone}}.dns'
