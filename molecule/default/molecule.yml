@@ -8,7 +8,7 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: dns
+  - name: WindowsServer
     box: jborean93/WindowsServer2016
 provisioner:
   name: ansible
