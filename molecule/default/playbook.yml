@@ -1,5 +1,71 @@
 ---
 - name: Converge
   hosts: all
-  roles:
-    - role: amtega.win_dns_records
+  tasks:
+
+    - name: 'win_dns_records - Add records - overwrite: yes'
+      vars:
+        win_dns_records:
+        - zone: '{{ win_dns_record_zone }}'
+          name: test1
+          value: 1.2.3.4
+          type: A
+          overwrite: yes
+          state: present
+      import_role:
+        name: amtega.win_dns_records
+        allow_duplicates: yes
+
+    - name: 'win_dns_records - Add records - overwrite: yes'
+      vars:
+        win_dns_records:
+        - zone: '{{ win_dns_record_zone }}'
+          name: test1
+          value: 1.2.3.5
+          type: A
+          overwrite: yes
+          state: present
+      import_role:
+        name: amtega.win_dns_records
+        allow_duplicates: yes
+
+    - name: 'win_dns_records - Add records - overwrite: no'
+      vars:
+        win_dns_records:
+        - zone: '{{ win_dns_record_zone }}'
+          name: test1
+          value: 1.2.3.5
+          type: A
+          overwrite: no
+          state: present
+      import_role:
+        name: amtega.win_dns_records
+        allow_duplicates: yes
+
+    - name: 'win_dns_records - Add records - overwrite: default'
+      vars:
+        win_dns_records:
+        - zone: '{{ win_dns_record_zone }}'
+          name: test1
+          value: 1.2.3.6
+          type: A
+          state: present
+        - zone: '{{ win_dns_record_revzone }}'
+          name: 7
+          value: ansible-mirror.example.com
+          type: PTR
+          overwrite: yes
+      import_role:
+        name: amtega.win_dns_records
+        allow_duplicates: yes
+
+    - name: 'win_dns_records - Remove records'
+      vars:
+        win_dns_records:
+        - zone: '{{ win_dns_record_zone }}'
+          name: test1
+          type: A
+          state: absent
+      import_role:
+        name: amtega.win_dns_records
+        allow_duplicates: yes
