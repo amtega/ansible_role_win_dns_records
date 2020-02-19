@@ -26,22 +26,16 @@ A list of all the default variables for this role is available in `defaults/main
 
 ## Testing
 
+Tests are based on W2016 vagrant virtual machine.
+
 ### Dependencies
 
-Tests are based on vagrant virtual machines. You can setup vagrant engine
-quickly using the role [amtega.vagrant_engine](https://galaxy.ansible.com/amtega/vagrant_engine).
-
-### Execution
-
-Once you have vagrant and virtualbox, you can run the tests with the following
-commands:
+Tests are based on molecule with vagrant virtual machines.
+Follow the instructions in `molecule/default/INSTALL.rst`.
 
 ```shell
-$ cd amtega.win_dns_records/tests
-$ vagrant init jborean93/WindowsServer2016
-$ vagrant up
-$ ansible-playbook main.yml
-$ ansible-playbook main.yml --diff
+$ cd amtega.win_dns_records
+$ molecule test
 ```
 
 ## License
