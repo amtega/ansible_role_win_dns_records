@@ -64,6 +64,7 @@
     computer_name: >-
       {{ win_dns_records_item.computer_name
          | default(omit) }}
+  # noqa 503
   when: >-
     ((win_dns_records_item.state | default('present')) == 'absent')
     | ternary(True,
