@@ -1,0 +1,40 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+lint:
+  name: yamllint
+platforms:
+  - name: WindowsServer
+    box: jborean93/WindowsServer2016
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  inventory:
+    hosts:
+      all:
+        vars:
+          win_dns_record_zone: test.ansible.local
+          win_dns_record_revzone: 0.0.255.in-addr.arpa
+          win_dns_record_revzone_network: 255.0.0.0/24
+          win_dns_records_no_log: no
+        children:
+          windows:
+            hosts:
+              WindowsServer:
+                ansible_host: 127.0.0.1
+                ansible_user: vagrant
+                ansible_password: vagrant
+                ansible_port: 55986
+                ansible_connection: winrm
+                ansible_winrm_transport: ntlm
+                ansible_winrm_server_cert_validation: ignore
+
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
