@@ -2,6 +2,10 @@
 - name: Converge
   hosts: all
   tasks:
+    - name: '🔍 win_dns_records - Add records - overwrite: yes  🔍'
+      assert:
+        quiet: yes
+        that: yes
 
     - name: 'win_dns_records - Add records - overwrite: yes'
       vars:
@@ -16,6 +20,11 @@
         name: amtega.win_dns_records
         allow_duplicates: yes
 
+    - name: '🔍 win_dns_records - Add records - overwrite: yes 🔍'
+      assert:
+        quiet: yes
+        that: yes
+
     - name: 'win_dns_records - Add records - overwrite: yes'
       vars:
         win_dns_records:
@@ -29,18 +38,28 @@
         name: amtega.win_dns_records
         allow_duplicates: yes
 
+    - name: '🔍 win_dns_records - Add records - overwrite: no 🔍'
+      assert:
+        quiet: yes
+        that: yes
+
     - name: 'win_dns_records - Add records - overwrite: no'
       vars:
         win_dns_records:
         - zone: '{{ win_dns_record_zone }}'
           name: test1
-          value: 1.2.3.5
+          value: 1.2.3.15
           type: A
           overwrite: no
           state: present
       import_role:
         name: amtega.win_dns_records
         allow_duplicates: yes
+
+    - name: '🔍 win_dns_records - Add records - overwrite: default 🔍'
+      assert:
+        quiet: yes
+        that: yes
 
     - name: 'win_dns_records - Add records - overwrite: default'
       vars:
@@ -58,6 +77,11 @@
       import_role:
         name: amtega.win_dns_records
         allow_duplicates: yes
+
+    - name: '🔍 win_dns_records - Remove records 🔍'
+      assert:
+        quiet: yes
+        that: yes
 
     - name: 'win_dns_records - Remove records'
       vars:

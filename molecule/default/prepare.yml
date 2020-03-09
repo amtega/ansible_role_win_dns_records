@@ -1,6 +1,6 @@
 ---
 - name: Prepare
-  hosts: windows
+  hosts: all
   tasks:
     - name: Win ping pdc
       win_ping:
