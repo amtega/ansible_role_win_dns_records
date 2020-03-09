@@ -1,7 +1,7 @@
 ---
 # Role tasks
 
-- name: Dns records could be overwriten
+- name: Find out what Dns records could be overwriten
   win_dns_record:
     state: absent
     name: >-
@@ -20,7 +20,7 @@
       {{ win_dns_records_item.computer_name
          | default(omit) }}
   when: >-
-    (win_dns_records_item.overwrite | default(True))
+    (not win_dns_records_item.overwrite | default(True))
     and (win_dns_records_item.state | default('present')) == 'present'
   loop: "{{ win_dns_records_to_manage }}"
   loop_control:
