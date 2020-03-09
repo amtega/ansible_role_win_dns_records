@@ -2,10 +2,6 @@
 - name: Converge
   hosts: all
   tasks:
-    - name: '🔍 win_dns_records - Add records - overwrite: yes  🔍'
-      assert:
-        quiet: yes
-        that: yes
 
     - name: 'win_dns_records - Add records - overwrite: yes'
       vars:
@@ -16,14 +12,9 @@
           type: A
           overwrite: yes
           state: present
-      import_role:
+      include_role:
         name: amtega.win_dns_records
         allow_duplicates: yes
-
-    - name: '🔍 win_dns_records - Add records - overwrite: yes 🔍'
-      assert:
-        quiet: yes
-        that: yes
 
     - name: 'win_dns_records - Add records - overwrite: yes'
       vars:
@@ -34,14 +25,9 @@
           type: A
           overwrite: yes
           state: present
-      import_role:
+      include_role:
         name: amtega.win_dns_records
         allow_duplicates: yes
-
-    - name: '🔍 win_dns_records - Add records - overwrite: no 🔍'
-      assert:
-        quiet: yes
-        that: yes
 
     - name: 'win_dns_records - Add records - overwrite: no'
       vars:
@@ -52,14 +38,9 @@
           type: A
           overwrite: no
           state: present
-      import_role:
+      include_role:
         name: amtega.win_dns_records
         allow_duplicates: yes
-
-    - name: '🔍 win_dns_records - Add records - overwrite: default 🔍'
-      assert:
-        quiet: yes
-        that: yes
 
     - name: 'win_dns_records - Add records - overwrite: default'
       vars:
@@ -74,14 +55,9 @@
           value: ansible-mirror.example.com
           type: PTR
           overwrite: yes
-      import_role:
+      include_role:
         name: amtega.win_dns_records
         allow_duplicates: yes
-
-    - name: '🔍 win_dns_records - Remove records 🔍'
-      assert:
-        quiet: yes
-        that: yes
 
     - name: 'win_dns_records - Remove records'
       vars:
@@ -90,6 +66,6 @@
           name: test1
           type: A
           state: absent
-      import_role:
+      include_role:
         name: amtega.win_dns_records
         allow_duplicates: yes
