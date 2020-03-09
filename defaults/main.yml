@@ -5,7 +5,9 @@
 # attributes:
 #
 # name: <name>                  # The name of the record
-# state: <state>                # Can be `present` or `absent`
+# state: <state>                # Can be `present` or `absent` (default present)
+# overwrite: <bool>             # Avoids overwrite value when set to false
+#                               #   (default true)
 # ttl: <ttl>                    # The "time to live" of the record, in seconds.
 # type: <type>                  # Can be `A`, `AAAA`, `CNAME` or `PTR`
 # value: <value>                # The value(s) to specify

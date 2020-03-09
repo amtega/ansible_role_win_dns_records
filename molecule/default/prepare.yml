@@ -1,8 +1,6 @@
 ---
-# Tasks for testing role
-
-- name: Create testing environment
-  hosts: windows
+- name: Prepare
+  hosts: all
   tasks:
     - name: Win ping pdc
       win_ping:
@@ -41,21 +39,3 @@
           win_shell: >-
             Add-DnsServerPrimaryZone -NetworkID \
             '{{ win_dns_record_revzone_network }}' -ZoneFile '{{ win_dns_record_revzone}}.dns'
-
-        - import_tasks: tasks/tests-record_list.yml
-
-        - name: Using win_dns_records role
-          vars:
-            win_dns_records: []
-          import_role:
-            name: amtega.win_dns_records
-            allow_duplicates: yes
-
-        - import_tasks: tasks/tests-A.yml
-        - import_tasks: tasks/tests-AAAA.yml
-        - import_tasks: tasks/tests-CNAME.yml
-        - import_tasks: tasks/tests-PTR.yml
-
-      always:
-       - name: Clean tasks
-         import_tasks: tasks/clean.yml
