@@ -35,7 +35,9 @@
     win_dns_records_to_manage: >-
       {{ win_dns_records
          + ((win_dns_records_load_from_hostvars)
-            | ternary(win_dns_records_hostvars | default([]) | flatten, [])) }}
+            | ternary(win_dns_records_hostvars
+                      | default([])
+                      | flatten, [])) }}
   check_mode: yes
   register: get_dns_result
   tags:
@@ -85,7 +87,9 @@
     win_dns_records_to_manage: >-
       {{ win_dns_records
          + ((win_dns_records_load_from_hostvars)
-            | ternary(win_dns_records_hostvars | default([]) | flatten, [])) }}
+            | ternary(win_dns_records_hostvars
+                      | default([])
+                      | flatten, [])) }}
   register: set_dns_result
   tags:
     - role::win_dns_records
