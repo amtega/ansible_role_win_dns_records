@@ -8,20 +8,7 @@
         win_dns_records:
         - zone: '{{ win_dns_record_zone }}'
           name: test1
-          value: 1.2.3.4
-          type: A
-          overwrite: yes
-          state: present
-      include_role:
-        name: amtega.win_dns_records
-        allow_duplicates: yes
-
-    - name: 'Test win_dns_records - add records - overwrite: yes'
-      vars:
-        win_dns_records:
-        - zone: '{{ win_dns_record_zone }}'
-          name: test1
-          value: 1.2.3.5
+          value: 1.2.3.11
           type: A
           overwrite: yes
           state: present
@@ -33,37 +20,40 @@
       vars:
         win_dns_records:
         - zone: '{{ win_dns_record_zone }}'
-          name: test1
-          value: 1.2.3.15
+          name: test2
+          value: 1.2.3.12
           type: A
           overwrite: no
           state: present
       include_role:
         name: amtega.win_dns_records
         allow_duplicates: yes
+      tags:
+        - molecule-idempotence-notest
+        # Is idempotent, but reports changes not applied (with `check: yes`)
 
     - name: 'Test win_dns_records - add records - overwrite: default'
       vars:
         win_dns_records:
         - zone: '{{ win_dns_record_zone }}'
-          name: test1
-          value: 1.2.3.6
+          name: test3
+          value: 1.2.3.13
           type: A
           state: present
         - zone: '{{ win_dns_record_revzone }}'
-          name: 7
-          value: ansible-mirror.example.com
+          name: 13
+          value: "test3.{{ win_dns_record_zone }}"
           type: PTR
           overwrite: yes
       include_role:
         name: amtega.win_dns_records
         allow_duplicates: yes
 
-    - name: 'Test win_dns_records - remove records'
+    - name: 'Test win_dns_records - add records - overwrite: no'
       vars:
         win_dns_records:
         - zone: '{{ win_dns_record_zone }}'
-          name: test1
+          name: test4
           type: A
           state: absent
       include_role:
