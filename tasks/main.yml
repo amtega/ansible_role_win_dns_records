@@ -1,7 +1,7 @@
 ---
 # Role tasks
 
-- name: Find out what Dns records could be overwriten
+- name: Find out what DNS records could be overwriten
   win_dns_record:
     state: absent
     name: >-
@@ -43,7 +43,7 @@
   tags:
     - role::win_dns_records
 
-- name: Setup dns records
+- name: Setup DNS records
   win_dns_record:
     name: >-
       {{ win_dns_records_item.name
