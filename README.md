@@ -9,14 +9,14 @@ A list of all the default variables for this role is available in `defaults/main
 ## Example Playbook
 
 ```yml
-- name: win ping pdc
+- name: Win ping pdc
   win_ping:
 
-- name: using amtega.win_dns_records role to import win_dns_record module
+- name: Using amtega.win_dns_records role to import win_dns_record module
   import_role:
     name: amtega.win_dns_records
 
-- name: "Add DNS A records: test1 => 1.2.3.4"
+- name: Add DNS A records: test1 => 1.2.3.4
   win_dns_record:
     zone: domain.local
     name: test1
