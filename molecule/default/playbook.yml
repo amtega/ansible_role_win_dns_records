@@ -28,9 +28,6 @@
       include_role:
         name: amtega.win_dns_records
         allow_duplicates: yes
-      tags:
-        - molecule-idempotence-notest
-        # Is idempotent, but reports changes not applied (with `check: yes`)
 
     - name: 'Test win_dns_records - add records - overwrite: default'
       vars:
