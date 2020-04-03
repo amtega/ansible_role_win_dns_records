@@ -3,6 +3,19 @@
 - name: Converge
   hosts: all
   tasks:
+    - name: 'Test win_dns_records - add records - overwrite: no'
+      vars:
+        win_dns_records:
+        - zone: '{{ win_dns_record_zone }}'
+          name: test1
+          value: 1.2.3.10
+          type: A
+          overwrite: no
+          state: present
+      include_role:
+        name: amtega.win_dns_records
+        allow_duplicates: yes
+
     - name: 'Test win_dns_records - add records - overwrite: yes'
       vars:
         win_dns_records:
@@ -28,9 +41,6 @@
       include_role:
         name: amtega.win_dns_records
         allow_duplicates: yes
-      tags:
-        - molecule-idempotence-notest
-        # Is idempotent, but reports changes not applied (with `check: yes`)
 
     - name: 'Test win_dns_records - add records - overwrite: default'
       vars:
