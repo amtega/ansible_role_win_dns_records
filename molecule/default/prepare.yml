@@ -34,13 +34,27 @@
 
         - name: Create the forward zone
           win_shell: >-
-            Add-DnsServerPrimaryZone -Name \
-            '{{ win_dns_record_zone }}' -ZoneFile '{{ win_dns_record_zone}}.dns'
+            Add-DnsServerPrimaryZone
+            -Name '{{ win_dns_record_zone }}'
+            -ZoneFile '{{ win_dns_record_zone }}.dns'
 
         - name: Create the reverse zone
           win_shell: >-
-            Add-DnsServerPrimaryZone -NetworkID \
-            '{{ win_dns_record_revzone_network }}' -ZoneFile '{{ win_dns_record_revzone}}.dns'
+            Add-DnsServerPrimaryZone
+            -NetworkID '{{ win_dns_record_revzone_network }}'
+            -ZoneFile '{{ win_dns_record_revzone }}.dns'
+
+        - name: Create the reverse zone 2
+          win_shell: >-
+            Add-DnsServerPrimaryZone
+            -NetworkID '{{ win_dns_record_revzone_network2 }}'
+            -ZoneFile '{{ win_dns_record_revzone2 }}.dns'
+
+        - name: Create the reverse zone 3
+          win_shell: >-
+            Add-DnsServerPrimaryZone
+            -NetworkID '{{ win_dns_record_revzone_network3 }}'
+            -ZoneFile '{{ win_dns_record_revzone3 }}.dns'
 
     - name: Prepare DNS records for testing
       block:
