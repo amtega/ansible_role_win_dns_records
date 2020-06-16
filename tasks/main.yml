@@ -50,7 +50,7 @@
     }
     If ($record_obj) { "present" } Else { "absent" }
   when: >-
-    (not win_dns_records_item.overwrite | default(True))
+    (not win_dns_records_item.overwrite | default(True) | bool)
     and (win_dns_records_item.state | default('present')) == 'present'
   loop: "{{ win_dns_records_to_manage }}"
   loop_control:
@@ -98,7 +98,8 @@
                       | flatten, [])) }}
     record_should_be_absent: >-
       {{ (win_dns_records_item.state | default('present')) == 'absent' }}
-    overwrite_record: "{{ win_dns_records_item.overwrite | default(False) }}"
+    overwrite_record: >-
+      {{ win_dns_records_item.overwrite | default(False) | bool }}
     record_is_present: >-
       {{ "present" in
       (get_dns_result.results[win_dns_records_index].stdout
