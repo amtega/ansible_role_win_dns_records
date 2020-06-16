@@ -6,11 +6,10 @@ driver:
   name: vagrant
   provider:
     name: virtualbox
-lint:
-  name: yamllint
 platforms:
   - name: WindowsServer
     box: jborean93/WindowsServer2016
+    memory: 2048
     instance_raw_config_args:
       - 'vm.network "private_network", ip: "192.168.33.100"'
 provisioner:
