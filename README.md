@@ -12,16 +12,22 @@ A list of all the default variables for this role is available in `defaults/main
 - name: Win ping pdc
   win_ping:
 
-- name: Using amtega.win_dns_records role to import win_dns_record module
-  import_role:
+- include_role:
     name: amtega.win_dns_records
-
-- name: Add DNS A records: test1 => 1.2.3.4
-  win_dns_record:
-    zone: domain.local
-    name: test1
-    value: 1.2.3.4
-    type: A
+  vars:
+    win_dns_records:
+      fail_all_on_overwrite: yes
+      records:
+        - name: test1
+          zone: domain.local
+          value: 1.2.3.4
+          type: A
+          ttl: 3600
+        - name: 4
+          zone: 3.2.1.in-addr.arpa.
+          value: test1.domain.local.
+          type: PTR
+          ttl: 3600
 ```
 
 ## Testing
