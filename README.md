@@ -15,9 +15,8 @@ A list of all the default variables for this role is available in `defaults/main
 - include_role:
     name: amtega.win_dns_records
   vars:
+    win_dns_records_fail_all_on_overwrite: yes
     win_dns_records:
-      fail_all_on_overwrite: yes
-      records:
         - name: test1
           zone: domain.local
           value: 1.2.3.4

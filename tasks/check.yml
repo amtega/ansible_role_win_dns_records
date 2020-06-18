@@ -1,0 +1,80 @@
+- name: Find out what DNS records could be overwriten
+  vars:
+    win_dns_records_to_manage: >-
+      {{ win_dns_records
+         + ((win_dns_records_load_from_hostvars)
+            | ternary(win_dns_records_hostvars
+                      | default([])
+                      | flatten, [])) }}
+    name: >-
+      {{ win_dns_records_item.name
+         | default("") }}
+    type: >-
+      {{ win_dns_records_item.type
+         | default("") }}
+    value: >-
+      {{ win_dns_records_item.value
+        | default(omit) }}
+    zone: >-
+      {{ win_dns_records_item.zone
+         | default("") }}
+    computer_name: >-
+      {{ win_dns_records_item.computer_name
+         | default("") }}
+  win_shell: |-
+    # Parameters
+    $name="{{ name }}"
+    $type="{{ type }}"
+    $value="{{ value }}"
+    $zone="{{ zone }}"
+    $dns_computer_name = "{{ computer_name }}"
+
+    # External computer
+    $extra_args = @{}
+    if ("" -ne $dns_computer_name) {
+        $extra_args.ComputerName = $dns_computer_name
+    }
+
+    # Record detection
+    Try {
+        $record_obj = Get-DnsServerResourceRecord `
+          -ZoneName $zone `
+          -Name $name `
+          -RRType $type `
+          -Node -ErrorAction:Ignore `
+          @extra_args
+    }
+    Catch {
+        $record_obj = $null
+        Write-Host ("Error while adding pointer record:`n" `
+                    + "$($Error[0].Exception.Message)")
+    }
+    If ($record_obj) {
+      Write-Host "DEBUG: $($record_obj.value))"
+      If ($type -eq "A") {
+        $found_value = $record_obj.RecordData.IPv4Address.IPAddressToString
+      } ElseIf ($type -eq "PTR") {
+        $found_value = $record_obj.RecordData.PtrDomainName
+      }
+      If ($found_value -ne $value) {
+        $record_common = ("[$zone] $($record_obj.HostName) " `
+          + "$($record_obj.TimeToLive.TotalSeconds) IN $type")
+        Write-Host ("Conflict: $record_common $value " `
+          + "≠ $record_common $found_value")
+        }
+    }
+  when: (win_dns_records_item.state | default('present')) == 'present'
+  loop: "{{ win_dns_records_to_manage }}"
+  loop_control:
+    loop_var: win_dns_records_item
+    index_var: win_dns_records_index
+    label: >-
+      [{{ win_dns_records_item.type | default('') }}]
+      {{ win_dns_records_item.name | default('') }} -
+      {{ win_dns_records_item.zone | default('') }}
+  changed_when: no
+  failed_when: "'Conflict: ' in get_dns_result.stdout"
+  no_log: "{{ win_dns_records_no_log }}"
+  register: get_dns_result
+  tags:
+    - role::win_dns_records
