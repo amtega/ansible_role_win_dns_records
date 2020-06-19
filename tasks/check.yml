@@ -50,7 +50,6 @@
                     + "$($Error[0].Exception.Message)")
     }
     If ($record_obj) {
-      Write-Host "DEBUG: $($record_obj.value))"
       If ($type -eq "A") {
         $found_value = $record_obj.RecordData.IPv4Address.IPAddressToString
       } ElseIf ($type -eq "PTR") {

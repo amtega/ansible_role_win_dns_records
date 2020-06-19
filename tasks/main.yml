@@ -7,6 +7,10 @@
   when: win_dns_records_fail_all_on_overwrite
 
 - name: Setup DNS records
+  # Used "is not failed" as "ignore_errors: yes" failsafe 
+  when: >-
+    win_dns_records_fail_all_on_overwrite
+    | ternary(get_dns_result | default({}) is not failed, True)
   win_dns_record:
     name: >-
       {{ win_dns_records_item.name

@@ -3,47 +3,42 @@
 - name: Converge
   hosts: all
   tasks:
-    - name: 'Test win_dns_records - add records - overwrite: no'
-      vars:
-        win_dns_records:
-        - zone: '{{ win_dns_record_zone }}'
-          name: test1
-          value: 1.2.3.10
-          type: A
-          overwrite: no
-          state: present
-      include_role:
-        name: amtega.win_dns_records
-        allow_duplicates: yes
 
-    - name: 'Test win_dns_records - add records - overwrite: yes'
-      vars:
-        win_dns_records:
-        - zone: '{{ win_dns_record_zone }}'
-          name: test1
-          value: 1.2.3.11
-          type: A
-          overwrite: yes
-          state: present
-      include_role:
-        name: amtega.win_dns_records
-        allow_duplicates: yes
+    - name: Block needed to ignore errors
+      ignore_errors: yes
+      block:
 
-    - name: 'Test win_dns_records - add records - overwrite: no'
-      vars:
-        win_dns_records:
-        - zone: '{{ win_dns_record_zone }}'
-          name: test2
-          value: 1.2.3.12
-          type: A
-          overwrite: no
-          state: present
-      include_role:
-        name: amtega.win_dns_records
-        allow_duplicates: yes
+        - name: >-
+            Test win_dns_records - add existing record - fail on overwrite: yes
+          vars:
+            win_dns_records_fail_all_on_overwrite: yes
+            win_dns_records:
+            - zone: '{{ win_dns_record_zone }}'
+              name: test1
+              value: 1.2.3.11
+              type: A
+              state: present
+          include_role:
+            name: amtega.win_dns_records
+            allow_duplicates: yes
 
-    - name: 'Test win_dns_records - add records - overwrite: default'
+        - name: >-
+            Test win_dns_records - add existing record
+            - fail on overwrite: default
+          vars:
+            win_dns_records:
+            - zone: '{{ win_dns_record_zone }}'
+              name: test2
+              value: 1.2.3.12
+              type: A
+              state: present
+          include_role:
+            name: amtega.win_dns_records
+            allow_duplicates: yes
+
+    - name: 'Test win_dns_records - add existing record - fail on overwrite: no'
       vars:
+        win_dns_records_fail_all_on_overwrite: no
         win_dns_records:
         - zone: '{{ win_dns_record_zone }}'
           name: test3
@@ -59,13 +54,52 @@
         name: amtega.win_dns_records
         allow_duplicates: yes
 
-    - name: 'Test win_dns_records - add records - overwrite: no'
+    - name: 'Test win_dns_records - remove record - fail on overwrite: no'
       vars:
+        win_dns_records_fail_all_on_overwrite: no
         win_dns_records:
         - zone: '{{ win_dns_record_zone }}'
           name: test4
           type: A
           state: absent
+      include_role:
+        name: amtega.win_dns_records
+        allow_duplicates: yes
+
+    - name: 'Test win_dns_records - remove record - fail on overwrite: no'
+      vars:
+        win_dns_records_fail_all_on_overwrite: yes
+        win_dns_records:
+        - zone: '{{ win_dns_record_zone }}'
+          name: test5
+          type: A
+          state: absent
+      include_role:
+        name: amtega.win_dns_records
+        allow_duplicates: yes
+
+    - name: 'Test win_dns_records - add new record - fail on overwrite: yes'
+      vars:
+        win_dns_records_fail_all_on_overwrite: yes
+        win_dns_records:
+        - zone: '{{ win_dns_record_zone }}'
+          name: test6
+          value: 1.2.3.6
+          type: A
+          state: present
+      include_role:
+        name: amtega.win_dns_records
+        allow_duplicates: yes
+
+    - name: 'Test win_dns_records - add new record - fail on overwrite: no'
+      vars:
+        win_dns_records_fail_all_on_overwrite: no
+        win_dns_records:
+        - zone: '{{ win_dns_record_zone }}'
+          name: test7
+          value: 1.2.3.7
+          type: A
+          state: present
       include_role:
         name: amtega.win_dns_records
         allow_duplicates: yes

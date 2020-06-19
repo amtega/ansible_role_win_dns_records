@@ -57,63 +57,37 @@
             -ZoneFile '{{ win_dns_record_revzone3 }}.dns'
 
     - name: Prepare DNS records for testing
+      vars:
+        test_numbers: "{{ range(1,6) | list }}"
       block:
 
         - name: 'Prepare win_dns_records - remove records'
           vars:
             win_dns_records:
             - zone: '{{ win_dns_record_zone }}'
-              name: test1
+              name: "test{{ test_number }}"
               type: A
               state: absent
           include_role:
             name: amtega.win_dns_records
             allow_duplicates: yes
+          loop: "{{ test_numbers }}"
+          loop_control:
+            loop_var: test_number
+            label: "test{{ test_number }}"
 
-        - name: 'Prepare win_dns_records - add records - test1'
+        - name: 'Prepare win_dns_records - add records'
           vars:
             win_dns_records:
             - zone: '{{ win_dns_record_zone }}'
-              name: test1
-              value: 1.2.3.1
+              name: "test{{ test_number }}"
+              value: "1.2.3.{{ test_number }}"
               type: A
               state: present
           include_role:
             name: amtega.win_dns_records
             allow_duplicates: yes
-
-        - name: 'Prepare win_dns_records - add records - test2'
-          vars:
-            win_dns_records:
-            - zone: '{{ win_dns_record_zone }}'
-              name: test2
-              value: 1.2.3.2
-              type: A
-              state: present
-          include_role:
-            name: amtega.win_dns_records
-            allow_duplicates: yes
-
-        - name: 'Prepare win_dns_records - add records - test3'
-          vars:
-            win_dns_records:
-            - zone: '{{ win_dns_record_zone }}'
-              name: test3
-              value: 1.2.3.3
-              type: A
-              state: present
-          include_role:
-            name: amtega.win_dns_records
-            allow_duplicates: yes
-
-        - name: 'Prepare win_dns_records - add records - test4'
-          vars:
-            win_dns_records:
-            - zone: '{{ win_dns_record_zone }}'
-              name: test3
-              value: 1.2.3.4
-              type: A
-              state: present
-          include_role:
-            name: amtega.win_dns_records
-            allow_duplicates: yes
+          loop: "{{ test_numbers }}"
+          loop_control:
+            loop_var: test_number
+            label: "test{{ test_number }}"

@@ -31,11 +31,12 @@ A list of all the default variables for this role is available in `defaults/main
 
 ## Testing
 
-Tests are based on molecule with vagrant virtual machines. Follow the instructions in `molecule/default/INSTALL.rst`.
+Tests are based on [molecule with vagrant virtual machines](https://molecule.readthedocs.io/en/latest/installation.html).
 
 ```shell
-$ cd amtega.win_dns_records
-$ molecule test
+cd amtega.win_dns_records
+
+molecule test
 ```
 
 ## License
