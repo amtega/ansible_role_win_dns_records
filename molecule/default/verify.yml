@@ -1,0 +1,62 @@
+- name: Verify
+  hosts: all
+  vars:
+    expected:
+      - name: test1
+        type: A
+        value: 1.2.3.1
+        ttl: 3600
+      - name: test2
+        type: A
+        value: 1.2.3.2
+        ttl: 3600
+      - name: test3
+        type: A
+        value: 1.2.3.13
+        ttl: 3600
+      - name: 13
+        type: PTR
+        value: test3.test.ansible.local.
+        ttl: 3600
+        zone: 3.2.1.in-addr.arpa
+      - name: test6
+        type: A
+        value: 1.2.3.6
+        ttl: 3600
+      - name: test7
+        type: A
+        value: 1.2.3.7
+        ttl: 3600
+      # Absent
+      - name: test4
+        type: A
+        value: 1.2.3.4
+        ttl: 3600
+        state: absent
+      - name: test5
+        type: A
+        value: 1.2.3.5
+        ttl: 3600
+        state: absent
+  tasks:
+
+    - name: Win ping
+      win_ping:
+
+    - name: Verify records
+      vars:
+        zone: "{{ record.zone | default(win_dns_record_zone) }}"
+        name: "{{ record.name }}"
+        type: "{{ record.type }}"
+        value: "{{ record.value }}"
+        ttl: "{{ record.ttl }}"
+        state: "{{ record.state | default('present') }}"
+
+      include_tasks: verify_record.yml
+
+      loop: "{{ expected }}"
+      loop_control:
+        loop_var: record
+        label: >-
+          {{ state }} [{{ zone }}] {{ record.name }} {{ record.ttl }}
+          IN {{ record.type }} {{ record.value }}

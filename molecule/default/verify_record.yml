@@ -1,0 +1,68 @@
+- name: >-
+    Check expected record is {{ state }}:
+    [{{ zone }}] {{ name }} {{ ttl }} IN {{ type }} {{ value }}
+  win_shell: |-
+    # Parameters
+    $name="{{ name }}"
+    $zone="{{ zone }}"
+    $type="{{ type }}"
+    $value="{{ value }}"
+    $ttl="{{ ttl }}"
+    $state="{{ state }}"
+
+    $record_searched = "[$zone] $name $ttl IN $type $value"
+
+    # Record detection
+    Try {
+        $record_obj_raw = Get-DnsServerResourceRecord `
+            -ZoneName $zone `
+            -Name $name `
+            -RRType $type `
+            -Node -ErrorAction:Ignore
+        If ($record_obj_raw) {
+          $record_obj = $record_obj_raw | Select -Property `
+              HostName,`
+              RecordType,`
+              @{Name="IPAddress"; `
+                Expression={ $_.RecordData.CimInstanceProperties.Value}},`
+              @{Name="PtrDomainName"; `
+                      Expression={ $_.RecordData.PtrDomainName}}, `
+              @{Name="TimeToLive"; `
+                Expression={ $_.TimeToLive.TotalSeconds}}
+        } Else { $record_obj = $null }
+    } Catch {
+      $record_obj = $null
+    }
+
+    If ($record_obj) {
+      If ($type -eq "A") {
+        $found_value = $record_obj.IPAddress
+      } ElseIf ($type -eq "PTR") {
+        $found_value = $record_obj.PtrDomainName.Trim()
+      }
+
+      $record_found = ("[$zone] $($record_obj.HostName) " `
+        + "$($record_obj.TimeToLive) IN $type $found_value")
+
+      If ($state -eq "absent") {
+        Write-Host "Record shoud be absent: $record_found"
+        exit 2
+      }
+
+      If ($found_value -ne $value `
+          -or $ttl -ne $record_obj.TimeToLive) {
+        Write-Host ("Conflict: $record_searched ≠ $record_found ")
+        exit 3
+      }
+
+    } ElseIf ($state -eq "present") {
+      Write-Host "Record shoud be present: $record_searched"
+      exit 4
+    }
+  register: check_result
+  failed_when: no
+
+- name: Report failed Record
+  when: check_result.rc != 0
+  fail:
+    msg: "{{ check_result.stdout }}"

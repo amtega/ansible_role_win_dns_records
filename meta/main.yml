@@ -29,6 +29,7 @@ dependencies:
     vars:
       select_hostvars_query:
         pattern: "^win_dns_records_.*"
+        exclude_pattern: "^win_dns_records_fail_all_on_overwrite$"
         attributes:
           - name
         fact_name: win_dns_records_hostvars
