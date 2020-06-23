@@ -1,5 +1,7 @@
+---
+
 - name: Verify
-  hosts: all
+  hosts: molecule_hosts
   vars:
     expected:
       - name: test1
@@ -38,8 +40,8 @@
         value: 1.2.3.5
         ttl: 3600
         state: absent
-  tasks:
 
+  tasks:
     - name: Win ping
       win_ping:
 
@@ -51,9 +53,7 @@
         value: "{{ record.value }}"
         ttl: "{{ record.ttl }}"
         state: "{{ record.state | default('present') }}"
-
       include_tasks: verify_record.yml
-
       loop: "{{ expected }}"
       loop_control:
         loop_var: record
