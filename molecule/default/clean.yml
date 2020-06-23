@@ -1,3 +1,5 @@
+---
+
 - name: Remove test zone, if present
   win_shell: |
     $zone = '{{ item }}'

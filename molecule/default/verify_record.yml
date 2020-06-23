@@ -1,3 +1,5 @@
+---
+
 - name: >-
     Check expected record is {{ state }}:
     [{{ zone }}] {{ name }} {{ ttl }} IN {{ type }} {{ value }}

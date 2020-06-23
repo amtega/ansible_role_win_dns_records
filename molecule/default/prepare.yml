@@ -1,7 +1,7 @@
 ---
 
 - name: Prepare
-  hosts: all
+  hosts: molecule_hosts
   tasks:
     - name: Win ping pdc
       win_ping:
@@ -28,7 +28,7 @@
           when: dns_install.reboot_required | bool
 
         - name: Clean slate
-          import_tasks: tasks/clean.yml
+          import_tasks: clean.yml
           vars:
             fail_on_missing: no
 

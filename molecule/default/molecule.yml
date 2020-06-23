@@ -38,7 +38,16 @@ provisioner:
   name: ansible
   inventory:
     hosts:
-      all:
+      molecule_hosts:
+        hosts:
+          WindowsServer-${INSTANCE_UUID:-1}:
+            ansible_host: 127.0.0.1
+            ansible_user: vagrant
+            ansible_password: vagrant
+            ansible_port: 55986
+            ansible_connection: winrm
+            ansible_winrm_transport: ntlm
+            ansible_winrm_server_cert_validation: ignore
         vars:
           win_dns_record_zone: test.ansible.local
           win_dns_record_revzone: 3.2.1.in-addr.arpa
@@ -48,17 +57,6 @@ provisioner:
           win_dns_record_revzone3: 1.in-addr.arpa
           win_dns_record_revzone_network3: 1.0.0.0/8
           win_dns_records_no_log: no
-        children:
-          windows:
-            hosts:
-              "WindowsServer-${INSTANCE_UUID:-1}":
-                ansible_host: 127.0.0.1
-                ansible_user: vagrant
-                ansible_password: vagrant
-                ansible_port: 55986
-                ansible_connection: winrm
-                ansible_winrm_transport: ntlm
-                ansible_winrm_server_cert_validation: ignore
 
 verifier:
   name: ansible

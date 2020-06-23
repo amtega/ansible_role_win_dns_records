@@ -47,6 +47,6 @@ win_dns_records_load_from_hostvars: no
 
 win_dns_records_no_log: yes
 
-# Fail without changind any DNS record when overwrite is detected
+# Fail without changing any DNS record when overwrite is detected
 
 win_dns_records_fail_all_on_overwrite: yes
