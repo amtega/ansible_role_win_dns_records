@@ -32,13 +32,7 @@
     computer_name: >-
       {{ win_dns_records_item.computer_name
          | default(omit) }}
-  vars:
-    win_dns_records_to_manage: >-
-      {{ win_dns_records
-         + ((win_dns_records_load_from_hostvars)
-            | ternary(win_dns_records_hostvars
-                      | default([])
-                      | flatten, [])) }}
+  register: win_dns_records_setup_result
   loop: "{{ win_dns_records_to_manage }}"
   loop_control:
     loop_var: win_dns_records_item
@@ -47,6 +41,16 @@
       [{{ win_dns_records_item.type | default('') }}]
       {{ win_dns_records_item.name | default('') }} -
       {{ win_dns_records_item.value | default('') }}
+  retries: "{{ win_dns_retries }}"
+  delay: "{{ win_dns_retries_delay }}"
+  until: win_dns_records_setup_result is success
   no_log: "{{ win_dns_records_no_log }}"
+  vars:
+    win_dns_records_to_manage: >-
+      {{ win_dns_records
+         + ((win_dns_records_load_from_hostvars)
+            | ternary(win_dns_records_hostvars
+                      | default([])
+                      | flatten, [])) }}
   tags:
     - role::win_dns_records
