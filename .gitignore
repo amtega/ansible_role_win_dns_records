@@ -5,3 +5,6 @@
 
 .vagrant
 Vagrantfile
+
+.cache
+
