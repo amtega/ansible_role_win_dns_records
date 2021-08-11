@@ -3,6 +3,7 @@
 
 galaxy_info:
   role_name: win_dns_records
+  namespace: amtega
   author: Daniel Sánchez Fábregas
   description: Manage Active Directory DNS records
   company: AMTEGA - Xunta de Galicia
