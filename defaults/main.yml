@@ -54,7 +54,3 @@ win_dns_retries: 5
 # Seconds to delay between retry attempts
 
 win_dns_retries_delay: 1
-
-# Hide sensitive information
-
-win_dns_records_no_log: yes

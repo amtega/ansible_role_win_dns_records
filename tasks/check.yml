@@ -76,7 +76,6 @@
       {{ win_dns_records_item.zone | default('') }}
   changed_when: no
   failed_when: "'Conflict: ' in get_dns_result.stdout"
-  no_log: "{{ win_dns_records_no_log }}"
   register: get_dns_result
   tags:
     - role::win_dns_records

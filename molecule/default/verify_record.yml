@@ -3,7 +3,7 @@
 - name: >-
     Check expected record is {{ state }}:
     [{{ zone }}] {{ name }} {{ ttl }} IN {{ type }} {{ value }}
-  win_shell: |-
+  ansible.windows.win_shell: |-
     # Parameters
     $name="{{ name }}"
     $zone="{{ zone }}"
