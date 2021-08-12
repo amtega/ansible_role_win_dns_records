@@ -28,7 +28,7 @@
           when: dns_install.reboot_required | bool
 
         - name: Clean slate
-          import_tasks: cleanup.yml
+          import_tasks: clean.yml
           vars:
             fail_on_missing: no
 
