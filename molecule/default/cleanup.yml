@@ -4,6 +4,7 @@
   hosts: molecule_hosts
   gather_facts: no
   tasks:
-
     - name: Clean slate
-      import_tasks: clean.yml
+      import_tasks: includes/clean_zone.yml
+      vars:
+        fail_on_missing: no
