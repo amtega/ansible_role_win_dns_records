@@ -53,7 +53,7 @@
         value: "{{ record.value }}"
         ttl: "{{ record.ttl }}"
         state: "{{ record.state | default('present') }}"
-      include_tasks: verify_record.yml
+      include_tasks: includes/verify_record.yml
       loop: "{{ expected }}"
       loop_control:
         loop_var: record
