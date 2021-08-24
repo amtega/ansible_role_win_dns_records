@@ -2,3 +2,4 @@
 
 exclude_paths:
   - meta
+  - molecule/default/includes/verify_record.yml
